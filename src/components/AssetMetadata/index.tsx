@@ -2,6 +2,7 @@ import {DownloadIcon} from '@sanity/icons'
 import {Box, Button, Flex, Inline, Stack, Text} from '@sanity/ui'
 import {Asset, AssetItem} from '@types'
 import format from 'date-fns/format'
+import locale from 'date-fns/locale/nb'
 import filesize from 'filesize'
 import React, {ReactNode} from 'react'
 import getAssetResolution from '../../utils/getAssetResolution'
@@ -60,6 +61,18 @@ const AssetMetadata = (props: Props) => {
           <Row label="MIME type" value={asset?.mimeType} />
           <Row label="Extension" value={(asset?.extension).toUpperCase()} />
           {isImageAsset(asset) && <Row label="Dimensions" value={getAssetResolution(asset)} />}
+          {asset?._createdAt && (
+            <Row
+              label="Created"
+              value={format(new Date(asset._createdAt), 'dd.MM.yyyy HH:mm', {locale})}
+            />
+          )}
+          {asset?._updatedAt && (
+            <Row
+              label="Updated"
+              value={format(new Date(asset._updatedAt), 'dd.MM.yyyy HH:mm', {locale})}
+            />
+          )}
         </Stack>
       </Box>
       {/* EXIF */}
