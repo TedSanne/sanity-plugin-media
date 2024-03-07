@@ -253,7 +253,11 @@ const assetsSlice = createSlice({
               originalFilename,
               size,
               title,
-              url
+              url,
+              fomId,
+              copyright,
+              copyrightApprovedBy,
+              isOkForCopyrightUse
             } ${pipe} ${sort} ${selector},
           }
         `

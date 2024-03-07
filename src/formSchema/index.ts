@@ -14,7 +14,11 @@ export const assetFormSchema = z.object({
     })
   }),
   originalFilename: z.string().trim().min(1, {message: 'Filename cannot be empty'}),
-  title: z.string().trim().optional()
+  title: z.string().trim().optional(),
+  fomId: z.coerce.number().optional(),
+  copyright: z.string().optional(),
+  isOkForCopyrightUse: z.coerce.boolean().optional(),
+  copyrightApprovedBy: z.string().optional()
 })
 
 export const tagFormSchema = z.object({

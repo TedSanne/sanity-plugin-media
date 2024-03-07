@@ -6,7 +6,7 @@ import groq from 'groq'
 import React, {ReactNode, useCallback, useEffect, useRef, useState} from 'react'
 import {SubmitHandler, useForm} from 'react-hook-form'
 import {useDispatch} from 'react-redux'
-import {WithReferringDocuments, useColorScheme, useDocumentStore} from 'sanity'
+import {WithReferringDocuments, useColorScheme, useCurrentUser, useDocumentStore} from 'sanity'
 import {assetFormSchema} from '../../formSchema'
 import useTypedSelector from '../../hooks/useTypedSelector'
 import useVersionedClient from '../../hooks/useVersionedClient'
@@ -24,9 +24,10 @@ import DocumentList from '../DocumentList'
 import FileAssetPreview from '../FileAssetPreview'
 import FormFieldInputTags from '../FormFieldInputTags'
 import FormFieldInputText from '../FormFieldInputText'
-import FormFieldInputTextarea from '../FormFieldInputTextarea'
 import FormSubmitButton from '../FormSubmitButton'
 import Image from '../Image'
+import FormFieldInputNumber from '../FormFieldInputNumber'
+import FormFieldInputBoolean from '../FormFieldInputBoolean'
 
 type Props = {
   children: ReactNode
@@ -63,10 +64,13 @@ const DialogAssetEdit = (props: Props) => {
     (asset?: Asset): AssetFormData => {
       return {
         altText: asset?.altText || '',
-        description: asset?.description || '',
         originalFilename: asset?.originalFilename || '',
         opt: {media: {tags: assetTagOptions}},
-        title: asset?.title || ''
+        title: asset?.title || '',
+        fomId: asset?.fomId || '',
+        copyright: asset?.copyright || '',
+        isOkForCopyrightUse: !!asset?.isOkForCopyrightUse,
+        copyrightApprovedBy: asset?.copyrightApprovedBy || ''
       }
     },
     [assetTagOptions]
@@ -206,6 +210,19 @@ const DialogAssetEdit = (props: Props) => {
     assetUpdatedPrev.current = assetItem?.asset._updatedAt
   }, [assetItem?.asset, generateDefaultValues, reset])
 
+  const currentUser = useCurrentUser()
+
+  const submitHandler = useCallback(() => {
+    const {isOkForCopyrightUse, copyrightApprovedBy} = getValues()
+    if (isOkForCopyrightUse && !copyrightApprovedBy) {
+      setValue('copyrightApprovedBy', `${currentUser?.name} / ${currentUser?.email}`)
+    }
+    if (!isOkForCopyrightUse && copyrightApprovedBy) {
+      setValue('copyrightApprovedBy', '')
+    }
+    return handleSubmit(onSubmit)()
+  }, [currentUser, setValue, getValues, handleSubmit, onSubmit])
+
   const Footer = () => (
     <Box padding={3}>
       <Flex justify="space-between">
@@ -224,7 +241,7 @@ const DialogAssetEdit = (props: Props) => {
           disabled={formUpdating || !isDirty || !isValid}
           isValid={isValid}
           lastUpdated={currentAsset?._updatedAt}
-          onClick={handleSubmit(onSubmit)}
+          onClick={submitHandler}
         />
       </Flex>
     </Box>
@@ -333,6 +350,7 @@ const DialogAssetEdit = (props: Props) => {
                           value={currentAsset?.altText}
                         />
                         {/* Description */}
+                        {/**
                         <FormFieldInputTextarea
                           {...register('description')}
                           disabled={formUpdating}
@@ -341,6 +359,39 @@ const DialogAssetEdit = (props: Props) => {
                           name="description"
                           rows={5}
                           value={currentAsset?.description}
+                        /> */}
+
+                        <FormFieldInputText
+                          {...register('copyright')}
+                          disabled={formUpdating}
+                          error={errors?.copyright?.message}
+                          label="Bildekreditering"
+                          name="copyright"
+                          value={currentAsset?.copyright}
+                        />
+
+                        <FormFieldInputBoolean
+                          {...register('isOkForCopyrightUse')}
+                          disabled={formUpdating}
+                          error={errors?.isOkForCopyrightUse?.message}
+                          label="Kan brukes ihht Copyright"
+                          name="isOkForCopyrightUse"
+                          description={
+                            currentAsset?.copyrightApprovedBy
+                              ? `Godkjent av ${currentAsset?.copyrightApprovedBy}`
+                              : undefined
+                          }
+                          checked={getValues().isOkForCopyrightUse}
+                        />
+
+                        {/* FOM id */}
+                        <FormFieldInputNumber
+                          {...register('fomId')}
+                          disabled={formUpdating}
+                          error={errors?.fomId?.message}
+                          label="FOM Id"
+                          name="fomId"
+                          value={currentAsset?.fomId}
                         />
                       </Stack>
                     </TabPanel>
