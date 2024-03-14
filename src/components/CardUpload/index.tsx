@@ -1,9 +1,9 @@
 import {CloseIcon} from '@sanity/icons'
 import {Box, Button, Flex, Text} from '@sanity/ui'
 import filesize from 'filesize'
-import React from 'react'
+import React, {useEffect} from 'react'
 import {useDispatch} from 'react-redux'
-import {useColorScheme} from 'sanity'
+import {useColorScheme, useCurrentUser} from 'sanity'
 import styled from 'styled-components'
 import {PANEL_HEIGHT} from '../../constants'
 import useTypedSelector from '../../hooks/useTypedSelector'
@@ -11,6 +11,7 @@ import {selectUploadById, uploadsActions} from '../../modules/uploads'
 import FileIcon from '../FileIcon'
 import Image from '../Image'
 import {getSchemeColor} from '../../utils/getSchemeColor'
+import useVersionedClient from '../../hooks/useVersionedClient'
 
 type Props = {
   id: string
@@ -32,6 +33,27 @@ const CardUpload = (props: Props) => {
   // Redux
   const dispatch = useDispatch()
   const item = useTypedSelector(state => selectUploadById(state, id))
+
+  const client = useVersionedClient()
+  const currentUser = useCurrentUser()
+
+  useEffect(() => {
+    if (!item && id) {
+      client
+        .fetch("*[_type == 'sanity.imageAsset' && assetId == $assetId]{_id}[0]._id", {assetId: id})
+        .then(assetSanityId => {
+          if (assetSanityId) {
+            client
+              .patch(assetSanityId)
+              .setIfMissing({
+                copyrightApprovedBy: `${currentUser?.name} / ${currentUser?.email}`,
+                isOkForCopyrightUse: true
+              })
+              .commit()
+          }
+        })
+    }
+  }, [id, item, client, currentUser])
 
   if (!item) {
     return null
