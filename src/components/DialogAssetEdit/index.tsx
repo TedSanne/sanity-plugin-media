@@ -12,8 +12,8 @@ import useTypedSelector from '../../hooks/useTypedSelector'
 import useVersionedClient from '../../hooks/useVersionedClient'
 import {assetsActions, selectAssetById} from '../../modules/assets'
 import {dialogActions} from '../../modules/dialog'
-import {selectTags, selectTagSelectOptions, tagsActions} from '../../modules/tags'
-import getTagSelectOptions from '../../utils/getTagSelectOptions'
+import {selectTagSelectOptions} from '../../modules/tags'
+//import getTagSelectOptions from '../../utils/getTagSelectOptions'
 import {getUniqueDocuments} from '../../utils/getUniqueDocuments'
 import imageDprUrl from '../../utils/imageDprUrl'
 import sanitizeFormData from '../../utils/sanitizeFormData'
@@ -22,7 +22,7 @@ import AssetMetadata from '../AssetMetadata'
 import Dialog from '../Dialog'
 import DocumentList from '../DocumentList'
 import FileAssetPreview from '../FileAssetPreview'
-import FormFieldInputTags from '../FormFieldInputTags'
+//import FormFieldInputTags from '../FormFieldInputTags'
 import FormFieldInputText from '../FormFieldInputText'
 import FormSubmitButton from '../FormSubmitButton'
 import Image from '../Image'
@@ -47,7 +47,7 @@ const DialogAssetEdit = (props: Props) => {
 
   const dispatch = useDispatch()
   const assetItem = useTypedSelector(state => selectAssetById(state, String(assetId))) // TODO: check casting
-  const tags = useTypedSelector(selectTags)
+  //const tags = useTypedSelector(selectTags)
 
   const assetUpdatedPrev = useRef<string | undefined>(undefined)
 
@@ -56,7 +56,7 @@ const DialogAssetEdit = (props: Props) => {
   const [tabSection, setTabSection] = useState<'details' | 'references'>('details')
 
   const currentAsset = assetItem ? assetItem?.asset : assetSnapshot
-  const allTagOptions = getTagSelectOptions(tags)
+  //const allTagOptions = getTagSelectOptions(tags)
 
   const assetTagOptions = useTypedSelector(selectTagSelectOptions(currentAsset))
 
@@ -77,7 +77,7 @@ const DialogAssetEdit = (props: Props) => {
   )
 
   const {
-    control,
+    // control,
     // Read the formState before render to subscribe the form state through Proxy
     formState: {errors, isDirty, isValid},
     getValues,
@@ -117,7 +117,7 @@ const DialogAssetEdit = (props: Props) => {
       setAssetSnapshot(result as Asset)
     }
   }, [])
-
+  /*
   const handleCreateTag = useCallback(
     (tagName: string) => {
       // Dispatch action to create new tag
@@ -129,7 +129,7 @@ const DialogAssetEdit = (props: Props) => {
       )
     },
     [currentAsset?._id, dispatch]
-  )
+  )*/
 
   // Submit react-hook-form
   const onSubmit: SubmitHandler<AssetFormData> = useCallback(
@@ -310,7 +310,7 @@ const DialogAssetEdit = (props: Props) => {
                       id="details-panel"
                     >
                       <Stack space={3}>
-                        {/* Tags */}
+                        {/* Tags
                         <FormFieldInputTags
                           control={control}
                           disabled={formUpdating}
@@ -322,6 +322,7 @@ const DialogAssetEdit = (props: Props) => {
                           placeholder="Select or create..."
                           value={assetTagOptions}
                         />
+                        */}
                         {/* Filename */}
                         <FormFieldInputText
                           {...register('originalFilename')}
