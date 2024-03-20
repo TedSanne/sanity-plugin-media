@@ -28,6 +28,7 @@ import FormSubmitButton from '../FormSubmitButton'
 import Image from '../Image'
 import FormFieldInputNumber from '../FormFieldInputNumber'
 import FormFieldInputBoolean from '../FormFieldInputBoolean'
+import FormFieldInputTextarea from '../FormFieldInputTextarea'
 
 type Props = {
   children: ReactNode
@@ -351,16 +352,16 @@ const DialogAssetEdit = (props: Props) => {
                           value={currentAsset?.altText}
                         />
                         {/* Description */}
-                        {/**
+
                         <FormFieldInputTextarea
                           {...register('description')}
                           disabled={formUpdating}
                           error={errors?.description?.message}
                           label="Description"
                           name="description"
-                          rows={5}
+                          rows={2}
                           value={currentAsset?.description}
-                        /> */}
+                        />
 
                         <FormFieldInputText
                           {...register('copyright')}
