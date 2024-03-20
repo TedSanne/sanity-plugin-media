@@ -14,9 +14,12 @@ type Props = {
   item?: AssetItem
 }
 
-const Row = ({label, value}: {label: string; value: ReactNode}) => {
+const Row = ({label, value, canCopy}: {label: string; value: ReactNode; canCopy?: boolean}) => {
   return (
-    <Flex justify="space-between">
+    <Flex
+      justify="space-between"
+      onClick={() => (canCopy ? navigator?.clipboard?.writeText?.(value as string) : null)}
+    >
       <Text
         size={1}
         style={{
@@ -52,6 +55,8 @@ const AssetMetadata = (props: Props) => {
     window.location.href = `${asset.url}?dl=${asset.originalFilename}`
   }
 
+  const canCopyId = !!navigator?.clipboard?.writeText
+
   return (
     <Box marginTop={3}>
       {/* Base */}
@@ -73,6 +78,7 @@ const AssetMetadata = (props: Props) => {
               value={format(new Date(asset._updatedAt), 'dd.MM.yyyy HH:mm', {locale})}
             />
           )}
+          <Row label="ID" value={asset?._id} canCopy={canCopyId} />
         </Stack>
       </Box>
       {/* EXIF */}
