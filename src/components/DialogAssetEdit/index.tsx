@@ -26,6 +26,7 @@ import FileAssetPreview from '../FileAssetPreview'
 import FormFieldInputText from '../FormFieldInputText'
 import FormSubmitButton from '../FormSubmitButton'
 import Image from '../Image'
+import {useToolOptions} from '../../contexts/ToolOptionsContext'
 import FormFieldInputNumber from '../FormFieldInputNumber'
 import FormFieldInputBoolean from '../FormFieldInputBoolean'
 import FormFieldInputTextarea from '../FormFieldInputTextarea'
@@ -61,10 +62,15 @@ const DialogAssetEdit = (props: Props) => {
 
   const assetTagOptions = useTypedSelector(selectTagSelectOptions(currentAsset))
 
+  // Check if credit line options are configured
+  const {creditLine} = useToolOptions()
+
   const generateDefaultValues = useCallback(
     (asset?: Asset): AssetFormData => {
       return {
         altText: asset?.altText || '',
+        creditLine: asset?.creditLine || '',
+        description: asset?.description || '',
         originalFilename: asset?.originalFilename || '',
         opt: {media: {tags: assetTagOptions}},
         title: asset?.title || '',
@@ -362,6 +368,20 @@ const DialogAssetEdit = (props: Props) => {
                           rows={2}
                           value={currentAsset?.description}
                         />
+                        {/* CreditLine */}
+                        {creditLine?.enabled && (
+                          <FormFieldInputText
+                            {...register('creditLine')}
+                            error={errors?.creditLine?.message}
+                            label="Credit"
+                            name="creditLine"
+                            value={currentAsset?.creditLine}
+                            disabled={
+                              formUpdating ||
+                              creditLine?.excludeSources?.includes(currentAsset?.source?.name)
+                            }
+                          />
+                        )}
 
                         <FormFieldInputText
                           {...register('copyright')}

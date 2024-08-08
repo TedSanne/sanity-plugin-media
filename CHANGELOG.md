@@ -5,6 +5,24 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.2](https://github.com/sanity-io/sanity-plugin-media/compare/v2.3.1...v2.3.2) (2024-07-22)
+
+### Bug Fixes
+
+- **docs:** readme for creditLine and maximumUploadSize ([1b4ac30](https://github.com/sanity-io/sanity-plugin-media/commit/1b4ac30df4e5ae4acbe78352b60ab1a78fbf6a9a))
+
+## [2.3.1](https://github.com/sanity-io/sanity-plugin-media/compare/v2.3.0...v2.3.1) (2024-07-19)
+
+### Bug Fixes
+
+- add a layout component to provide tool options ([1512fba](https://github.com/sanity-io/sanity-plugin-media/commit/1512fbac94c8e3f77ed5394a1b14ac3c97b75aff))
+
+## [2.3.0](https://github.com/sanity-io/sanity-plugin-media/compare/v2.2.5...v2.3.0) (2024-07-16)
+
+### Features
+
+- [#203](https://github.com/sanity-io/sanity-plugin-media/issues/203) allow users to specify maximum upload size ([ae2bcd8](https://github.com/sanity-io/sanity-plugin-media/commit/ae2bcd8e706bb465500a552ad18fcb29cebb0719))
+
 ## [2.2.5](https://github.com/sanity-io/sanity-plugin-media/compare/v2.2.4...v2.2.5) (2024-01-12)
 
 ### Bug Fixes
